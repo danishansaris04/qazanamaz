@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Qaza Namaz Calculator</title>
@@ -7,19 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #f3f8f4;
-      --text-color: #2b3d2f;
-      --box-color: rgba(255,255,255,0.9);
-      --accent-color: #006400;
-      --header-bg: linear-gradient(135deg, #0f9d58, #bfdc84);
-      --bg-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzX1qvwuz_B3fLMXB14vC9os_o74beTA1eBPO4bqAkIm5miM9GGiuM5F6E&s=10');
-    }
-    body.dark {
       --bg-color: #111;
       --text-color: #eee;
-      --box-color: rgba(30,30,30,0.9);
+      --box-color: rgba(30, 30, 30, 0.9);
       --accent-color: #9ccc65;
       --header-bg: linear-gradient(135deg, #33691e, #689f38);
+      --bg-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3s9D5cVD0bAGTEbbSa7TF0qV6060hZO66gIHk5ekrV-ycuwNlVNjQe9ux&s=10');
     }
     *, *::before, *::after { box-sizing: border-box; }
     body {
@@ -31,15 +25,11 @@
       background-image: var(--bg-image);
       background-size: cover;
       background-attachment: fixed;
-      transition: 0.3s ease;
     }
     .overlay {
-      background-color: rgba(255,255,255,0.7);
+      background-color: rgba(0, 0, 0, 0.7);
       min-height: 100vh;
       padding-bottom: 40px;
-    }
-    body.dark .overlay {
-      background-color: rgba(0,0,0,0.7);
     }
     .container {
       max-width: 700px;
@@ -70,13 +60,9 @@
       margin-top: 5px;
       border-radius: 8px;
       font-size: 16px;
-      border: 1px solid #ccc;
-      background: white;
-    }
-    body.dark input, body.dark select {
+      border: 1px solid #555;
       background: #333;
       color: white;
-      border: 1px solid #555;
     }
     button {
       background: var(--accent-color);
@@ -99,17 +85,14 @@
       flex-wrap: wrap;
     }
     .result {
-      background: rgba(240,255,240,0.9);
+      background: rgba(30, 30, 30, 0.9);
+      color: #eee;
       padding: 20px;
       margin-top: 25px;
       border-radius: 12px;
       font-size: 16px;
       line-height: 1.6;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-    }
-    body.dark .result {
-      background: rgba(30,30,30,0.9);
-      color: #eee;
     }
     .warn {
       background: #e3f2fd;
@@ -136,37 +119,39 @@
     }
   </style>
 </head>
-<body>
+<body class="dark">
   <div class="overlay">
     <div class="container">
-      <h2>🕌 Qaza Umri Namaz Calculator</h2><label>Name:</label>
-  <input type="text" id="name" placeholder="Your name" />
+      <h2>🕌 Qaza Umri Namaz Calculator</h2>
 
-  <label>Gender:</label>
-  <select id="gender" onchange="updateStartAgeOptions()">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </select>
+      <label>Name:</label>
+      <input type="text" id="name" placeholder="Your name" />
 
-  <label>Start Age:</label>
-  <select id="startAge"></select>
+      <label>Gender:</label>
+      <select id="gender" onchange="updateStartAgeOptions()">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
 
-  <label>DOB:</label>
-  <input type="date" id="dob" />
+      <label>Start Age:</label>
+      <select id="startAge"></select>
 
-  <label>Daily Rakats:</label>
-  <input type="number" id="dailyRakats" value="50" />
+      <label>DOB:</label>
+      <input type="date" id="dob" />
 
-  <div class="btn-row">
-    <button onclick="calculate()">🧮 Calculate</button>
-    <button onclick="downloadImage()">🖼 Save Image</button>
-    <button onclick="toggleDarkMode()">🌙 Toggle Dark</button>
+      <label>Daily Rakats:</label>
+      <input type="number" id="dailyRakats" value="50" />
+
+      <div class="btn-row">
+        <button onclick="calculate()">🧮 Calculate</button>
+        <button onclick="downloadImage()">🖼 Save Image</button>
+      </div>
+
+      <div class="result" id="resultBox">Result will appear here...</div>
+    </div>
   </div>
 
-  <div class="result" id="resultBox">Result will appear here...</div>
-</div>
-
-  </div>  <script>
+  <script>
     function updateStartAgeOptions() {
       const gender = document.getElementById('gender').value;
       const sel = document.getElementById('startAge');
@@ -260,9 +245,6 @@
       res.innerHTML = o;
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-    }
     function downloadImage() {
       html2canvas(document.getElementById("resultBox"), { scale: 3 })
         .then(canvas => {
@@ -272,5 +254,6 @@
           link.click();
         });
     }
-  </script></body>
+  </script>
+</body>
 </html>
