@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Qaza Namaz Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -210,11 +209,13 @@
         const per = rakatsPerSalah[salah];
         const tot = per * daysMissed;
         total += tot;
-        if (daily % per !== 0) {
-          const adjusted = Math.ceil(daily / per) * per;
-          warnings.push(`${salah} is in groups of ${per}. Adjust to ${adjusted} rakats.`);
+
+        const adjustedDaily = Math.ceil(daily / per) * per;
+        if (adjustedDaily !== daily) {
+          warnings.push(`${salah} is in groups of ${per}. Using adjusted daily rakats = ${adjustedDaily}.`);
         }
-        const nDays = Math.ceil(tot/daily);
+
+        const nDays = Math.ceil(tot / adjustedDaily);
         breakdown[salah] = {
           total: tot,
           months: Math.floor(nDays/30),
