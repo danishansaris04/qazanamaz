@@ -1,0 +1,276 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Qaza Namaz Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f3f8f4;
+      --text-color: #2b3d2f;
+      --box-color: rgba(255,255,255,0.9);
+      --accent-color: #006400;
+      --header-bg: linear-gradient(135deg, #0f9d58, #bfdc84);
+      --bg-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzX1qvwuz_B3fLMXB14vC9os_o74beTA1eBPO4bqAkIm5miM9GGiuM5F6E&s=10');
+    }
+    body.dark {
+      --bg-color: #111;
+      --text-color: #eee;
+      --box-color: rgba(30,30,30,0.9);
+      --accent-color: #9ccc65;
+      --header-bg: linear-gradient(135deg, #33691e, #689f38);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      background-image: var(--bg-image);
+      background-size: cover;
+      background-attachment: fixed;
+      transition: 0.3s ease;
+    }
+    .overlay {
+      background-color: rgba(255,255,255,0.7);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+    body.dark .overlay {
+      background-color: rgba(0,0,0,0.7);
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: var(--box-color);
+      border-radius: 16px;
+      padding: 30px 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    h2 {
+      background: var(--header-bg);
+      font-family: 'Amiri', serif;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 32px;
+      margin: -30px -25px 30px -25px;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 15px;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      background: white;
+    }
+    body.dark input, body.dark select {
+      background: #333;
+      color: white;
+      border: 1px solid #555;
+    }
+    button {
+      background: var(--accent-color);
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 15px;
+      flex: 1;
+    }
+    button:hover {
+      filter: brightness(0.9);
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .result {
+      background: rgba(240,255,240,0.9);
+      padding: 20px;
+      margin-top: 25px;
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.6;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+    }
+    body.dark .result {
+      background: rgba(30,30,30,0.9);
+      color: #eee;
+    }
+    .warn {
+      background: #e3f2fd;
+      color: #c62828;
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+    .warn strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    ul {
+      padding-left: 24px;
+      margin-top: 8px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+      h2 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container">
+      <h2>🕌 Qaza Umri Namaz Calculator</h2><label>Name:</label>
+  <input type="text" id="name" placeholder="Your name" />
+
+  <label>Gender:</label>
+  <select id="gender" onchange="updateStartAgeOptions()">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </select>
+
+  <label>Start Age:</label>
+  <select id="startAge"></select>
+
+  <label>DOB:</label>
+  <input type="date" id="dob" />
+
+  <label>Daily Rakats:</label>
+  <input type="number" id="dailyRakats" value="50" />
+
+  <div class="btn-row">
+    <button onclick="calculate()">🧮 Calculate</button>
+    <button onclick="downloadImage()">🖼 Save Image</button>
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark</button>
+  </div>
+
+  <div class="result" id="resultBox">Result will appear here...</div>
+</div>
+
+  </div>  <script>
+    function updateStartAgeOptions() {
+      const gender = document.getElementById('gender').value;
+      const sel = document.getElementById('startAge');
+      sel.innerHTML = '';
+      const start = gender === 'male' ? 12 : 9;
+      for (let i = start; i <= 15; i++) {
+        const o = document.createElement('option');
+        o.value = i; o.text = i + ' years';
+        sel.appendChild(o);
+      }
+    }
+    updateStartAgeOptions();
+
+    function calculateAgeDetails(f, t) {
+      let y = t.getFullYear() - f.getFullYear();
+      let m = t.getMonth() - f.getMonth();
+      let d = t.getDate() - f.getDate();
+      if (d < 0) { m--; d += new Date(t.getFullYear(), t.getMonth(), 0).getDate(); }
+      if (m < 0) { y--; m += 12; }
+      return { years: y, months: m, days: d };
+    }
+    function addDays(d, n) {
+      let r = new Date(d);
+      r.setDate(r.getDate() + n);
+      return r.toDateString();
+    }
+
+    function calculate() {
+      const name = document.getElementById("name").value.trim();
+      const gender = document.getElementById("gender").value;
+      const startAge = +document.getElementById("startAge").value;
+      const dobInput = document.getElementById("dob").value;
+      const daily = +document.getElementById("dailyRakats").value;
+      const res = document.getElementById("resultBox");
+      if (!name || !dobInput || !daily) {
+        res.innerHTML = "⚠️ Please fill all details.";
+        return;
+      }
+      const dob = new Date(dobInput);
+      const today = new Date();
+      const startDate = new Date(dob);
+      startDate.setFullYear(startDate.getFullYear() + startAge);
+      if (startDate > today) {
+        res.innerHTML = "⏳ Not yet eligible for Qaza Namaz.";
+        return;
+      }
+
+      const ageNow = calculateAgeDetails(dob, today);
+      const qAge = calculateAgeDetails(startDate, today);
+      const daysMissed = Math.floor((today - startDate)/(1000*60*60*24));
+      const rakatsPerSalah = { Fajr:2, Zuhr:4, Asr:4, Maghrib:3, Isha:4, Witr:3 };
+      let total = 0, breakdown = {}, warnings = [];
+
+      for (let salah in rakatsPerSalah) {
+        const per = rakatsPerSalah[salah];
+        const tot = per * daysMissed;
+        total += tot;
+        if (daily % per !== 0) {
+          const adjusted = Math.ceil(daily / per) * per;
+          warnings.push(`${salah} is in groups of ${per}. Adjust to ${adjusted} rakats.`);
+        }
+        const nDays = Math.ceil(tot/daily);
+        breakdown[salah] = {
+          total: tot,
+          months: Math.floor(nDays/30),
+          days: nDays%30,
+          endDate: addDays(today, nDays)
+        };
+      }
+
+      let o = `
+        <strong>${name}</strong><br>
+        📅 DOB: ${dob.toDateString()} &nbsp; | &nbsp; Today: ${today.toDateString()}<br>
+        🧓 Age: ${ageNow.years}y ${ageNow.months}m ${ageNow.days}d<br>
+        🙏 Qaza Start (age ${startAge}): ${qAge.years}y ${qAge.months}m ${qAge.days}d<br><br>
+        ❗ Missed Rakats: <strong>${total.toLocaleString()}</strong><br>
+        📌 Daily Rakats: <strong>${daily}</strong><br><br>
+        <ul>`;
+      for (let s in breakdown) {
+        const b = breakdown[s];
+        o += `<li><strong>${s}:</strong> ${b.total} rakats → ${b.months} months, ${b.days} days</li>`;
+      }
+      o += `</ul><hr><h3>📅 Completion Dates:</h3><ul>`;
+      for (let s in breakdown) {
+        o += `<li><strong>${s}:</strong> ${breakdown[s].endDate}</li>`;
+      }
+      o += '</ul>';
+      if (warnings.length) {
+        o += `<div class='warn'><strong>⚠️ Adjustments:</strong><br>${warnings.join('<br>')}</div>`;
+      }
+      res.innerHTML = o;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+    function downloadImage() {
+      html2canvas(document.getElementById("resultBox"), { scale: 3 })
+        .then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'Qaza_Result.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+    }
+  </script></body>
+</html>
